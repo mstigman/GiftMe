@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import Group from './group';
+import Main from './main';
 
 import firebase from 'firebase';
 import '@firebase/firestore';
@@ -34,39 +35,12 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 
 
-export default class App  extends Component {
-  state = {renderGroups: []};
-
-  componentDidMount() {
-    doc = db.collection('groups');
-    observer = doc.onSnapshot(snapshot => {
-      groups = this.state.renderGroups;
-      snapshot.forEach(doc => {
-        groups.push(
-          <Text key={doc.id}>{doc.data().name}</Text>
-        );
-        this.setState({renderGroups: groups});
-      })
-    }, err => {
-      console.log(`Encountered error: ${err}`);
-    });
-  }
-
-
-  render() {
-    displayGroups = this.state.renderGroups.map((p) => (
-      <Group db={db} name={p.name}></Group>
-    ));
+export default function App() {
   return (
-    
-
     <View style={styles.container}>
-      <Group db={db} name={"test"}></Group>
-      {this.state.renderGroups}
-      <CreateGroupModal db={db}></CreateGroupModal>
+      <Main db={db} auth={auth}></Main>
     </View>
   );
-  }
 }
 
 
@@ -74,6 +48,18 @@ export default class App  extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  list: {
+    flex: .8,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  create: {
+    flex: .2,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
