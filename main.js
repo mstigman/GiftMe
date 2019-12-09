@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, FlatList } from 'react-native';
 import Group from './group';
 
 import firebase from 'firebase';
@@ -13,33 +13,30 @@ import CreateGroupModal from './createGroupModel';
 
 
 export default class Main extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
+
+    state = {
         renderGroups: [], 
-        db: props.db,
-        auth: props.auth,
-        test: ""
+        db: this.props.db,
+        auth: this.props.auth,
     };
-  }
 
   test = [];
   //state = {renderGroups: []};
   componentDidMount() {
-    this.test.push(
-        <Group db={this.state.db} name={"yoshi"}/>
-      );
-      
-      this.setState({test: this.test});
-    this.state.db.collection('groups').onSnapshot(snapshot => {
-      snapshot.forEach(doc => {
-        this.state.renderGroups.push(
-            <Group db={this.state.db} name={doc.data().name}/>
-        );
-        console.log(doc.data().name);
 
+    this.state.db.collection('groups').onSnapshot(snapshot => {
+      groups = []
+      snapshot.forEach(doc => {
+        groups.push(
+          {
+            name: doc.data().name,
+            id: doc.id,
+          }
+          // <Group key={doc.id} db={this.state.db} name={doc.data().name}/>
+        );
+        // console.log(doc.data().name);
       })
-      this.setState({renderGroups: this.state.renderGroups});
+      this.setState({renderGroups: groups});
     }, err => {
       console.log(`Encountered error: ${err}`);
     });
@@ -47,21 +44,22 @@ export default class Main extends Component {
 
 
   componentDidUpdate() {
-    console.log("yeet");
   }
 
 
   render() {
-  return (
-    <View style={styles.container}>
-      <View style={styles.list}>
-        <Group db={this.state.db} name={"test"}/>
-        { this.state.renderGroups }
-        {console.log(this.state.renderGroups)}
+    const myList = this.state.renderGroups.map((item) => 
+      <View key={item.id}>
+        <Text>{item.name}</Text>
+      </View>)
+    return (
+      <View style={styles.container}>
+        <View style={styles.list}>
+          {myList}
+        </View>
+        <CreateGroupModal db={this.state.db} style={styles.create}></CreateGroupModal>
       </View>
-      <CreateGroupModal db={this.state.db} style={styles.create}></CreateGroupModal>
-    </View>
-  );
+    );
   }
 }
 

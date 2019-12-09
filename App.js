@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import Group from './group';
 import Main from './main';
@@ -10,6 +10,8 @@ import '@firebase/firestore';
 import { YellowBox } from 'react-native';
 import _ from 'lodash';
 import CreateGroupModal from './createGroupModel';
+import Login from './login';
+import CreateAccount from './createAccount';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 const _console = _.clone(console);
@@ -36,9 +38,36 @@ const auth = firebase.auth();
 
 
 export default function App() {
+  const [showCreateAccount, setShowCreateAccount] = useState(false);
+  const [showHome, setShowHome] = useState(false);
+
+  if (showCreateAccount) {
+    render = <CreateAccount 
+                db={db} 
+                auth={auth} 
+                back={() => {
+                  setShowHome(false);
+                  setShowCreateAccount(false);
+                }}
+              />;
+  } else if (showHome) {
+    render = <Main 
+                db={db} 
+                auth={auth} 
+
+              />;
+  } else {
+    render = <Login 
+                db={db} 
+                auth={auth}
+                loginSuccess={() => setShowHome(true)}
+                createAccount={() => setShowCreateAccount(true)}
+              />;
+  }
+
   return (
     <View style={styles.container}>
-      <Main db={db} auth={auth}></Main>
+      {render}
     </View>
   );
 }

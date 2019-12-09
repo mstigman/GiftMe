@@ -15,7 +15,6 @@ export default class Group extends Component {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
       backgroundColor: '#fff',
       alignItems: 'center',
       justifyContent: 'center',
@@ -23,11 +22,3 @@ const styles = StyleSheet.create({
 });
   
 
-function createGroup(db) {
-    db.collection('groups').doc().set({
-      test: "Big Yshi"
-    }).then(() => {
-      console.log();
-    });
-    return;
-  }
