@@ -12,6 +12,7 @@ import _ from 'lodash';
 import CreateGroupModal from './createGroupModel';
 import Login from './login';
 import CreateAccount from './createAccount';
+import Key from './apikey';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 const _console = _.clone(console);
@@ -25,7 +26,7 @@ console.warn = message => {
 
 
 firebaseConfig = {
-  apiKey: "AIzaSyB0y4sWetAgTE0oNmWDGEHugwlnHPe-DSI",
+  apiKey: Key,
   authDomain: "giftme-77cbd.firebaseapp.com",
   databaseURL: "https://giftme-77cbd.firebaseio.com",
   storageBucket: "giftme-77cbd.appspot.com",
